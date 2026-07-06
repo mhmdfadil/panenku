@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Login - PanenKu</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
-<body>
+<?= $this->extend('layouts/auth') ?>
+<?= $this->section('content') ?>
 
 <div class="auth-card">
   <div class="auth-brand">
@@ -83,5 +77,4 @@ function togglePwd() {
 }
 </script>
 
-</body>
-</html>
+<?= $this->endSection() ?>
