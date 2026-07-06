@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Dashboard - PanenKu</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
 <!-- Greeting -->
 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
@@ -384,5 +377,4 @@ function hapusPanen(id){
 }
 </script>
 
-</body>
-</html>
+<?= $this->endSection() ?>
