@@ -21,9 +21,12 @@ $routes->group('', ['filter' => 'guest'], function ($routes) {
 // ============================================================
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('logout',      'Auth::logout');
-    
+
     // Dashboard
     $routes->get('dashboard',   'Dashboard::index');
+
+    // Data Tanaman
+    $routes->get('tanaman',             'Tanaman::index');
 });
 
 // Redirect root to login
