@@ -28,6 +28,11 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Data Tanaman
     $routes->get('tanaman',             'Tanaman::index');
     $routes->get('tanaman/data',        'Tanaman::getData');
+    $routes->post('tanaman/store',      'Tanaman::store');
+    $routes->post('tanaman/update/(:num)', 'Tanaman::update/$1');
+    $routes->delete('tanaman/delete/(:num)', 'Tanaman::delete/$1');
+    $routes->get('tanaman/show/(:num)', 'Tanaman::show/$1');
+    $routes->get('tanaman/satuan-map',  'Tanaman::satuanMap');
 });
 
 // Redirect root to login
