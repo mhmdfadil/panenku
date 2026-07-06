@@ -20,6 +20,8 @@ $routes->group('', ['filter' => 'guest'], function ($routes) {
 // APP ROUTES (auth required)
 // ============================================================
 $routes->group('', ['filter' => 'auth'], function ($routes) {
+    $routes->get('logout',      'Auth::logout');
+    
     // Dashboard
     $routes->get('dashboard',   'Dashboard::index');
 });

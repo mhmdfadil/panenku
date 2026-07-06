@@ -90,4 +90,10 @@ class Auth extends Controller
 
         return redirect()->to('/login')->with('success', 'Pendaftaran berhasil! Silakan login.');
     }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/login')->with('success', 'Berhasil keluar.');
+    }
 }
