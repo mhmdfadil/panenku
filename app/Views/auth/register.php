@@ -13,18 +13,24 @@
   <h2 class="auth-title">Buat Akun Baru</h2>
   <p class="auth-subtitle">Daftarkan diri untuk mulai mencatat hasil panen</p>
 
-  <!-- Contoh tampilan pesan error (biasanya muncul jika validasi gagal) -->
-  <div class="alert alert-danger" style="margin-bottom:16px; display:none;" id="errorAlert">
-    <i class="bi bi-exclamation-circle-fill"></i>
-    <div>
-      <ul style="margin:4px 0 0; padding-left:16px;">
-        <li>Contoh pesan error 1</li>
-        <li>Contoh pesan error 2</li>
-      </ul>
+  <?php if (session()->getFlashdata('errors') || session('errors')): ?>
+    <div class="alert alert-danger" style="margin-bottom:16px;">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      <div>
+        <?php $errs = session()->getFlashdata('errors') ?: session('errors'); ?>
+        <?php if (is_array($errs)): ?>
+          <ul style="margin:4px 0 0; padding-left:16px;">
+            <?php foreach ($errs as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?>
+          </ul>
+        <?php else: ?>
+          <?= esc($errs) ?>
+        <?php endif; ?>
+      </div>
     </div>
-  </div>
+  <?php endif; ?>
 
-  <form action="/register" method="post" autocomplete="off">
+  <form action="<?= base_url('register') ?>" method="post" autocomplete="off">
+    <?= csrf_field() ?>
 
     <!-- Nama -->
     <div class="form-group">
@@ -33,7 +39,7 @@
         <i class="bi bi-person"></i>
         <input type="text" name="nama" class="form-control"
                placeholder="Nama Anda"
-               value="" required>
+               value="<?= old('nama') ?>" required>
       </div>
     </div>
 
@@ -55,7 +61,7 @@
         <div class="input-icon-wrap">
           <i class="bi bi-house"></i>
           <input type="text" id="inputDesa" name="desa" class="form-control"
-                placeholder="Nama desa..." value="">
+                placeholder="Nama desa..." value="<?= old('desa') ?>">
         </div>
       </div>
       <div class="form-group">
@@ -63,7 +69,7 @@
         <div class="input-icon-wrap">
           <i class="bi bi-buildings"></i>
           <input type="text" id="inputKecamatan" name="kecamatan" class="form-control"
-                placeholder="Nama kecamatan..." value="">
+                placeholder="Nama kecamatan..." value="<?= old('kecamatan') ?>">
         </div>
       </div>
     </div>
@@ -74,7 +80,7 @@
         <div class="input-icon-wrap">
           <i class="bi bi-building-check"></i>
           <input type="text" id="inputKabupaten" name="kabupaten" class="form-control"
-                placeholder="Kab. / Kota..." value="">
+                placeholder="Kab. / Kota..." value="<?= old('kabupaten') ?>">
         </div>
       </div>
       <div class="form-group">
@@ -82,7 +88,7 @@
         <div class="input-icon-wrap">
           <i class="bi bi-map"></i>
           <input type="text" id="inputProvinsi" name="provinsi" class="form-control"
-                placeholder="Nama provinsi..." value="">
+                placeholder="Nama provinsi..." value="<?= old('provinsi') ?>">
         </div>
       </div>
     </div>
@@ -96,11 +102,12 @@
         <i class="bi bi-geo-alt"></i>
         <input type="text" id="inputAlamat" name="alamat" class="form-control"
               placeholder="Desa, Kec., Kabupaten, Provinsi"
-              value="">
+              value="<?= old('alamat') ?>">
       </div>
       <small id="gpsMessage" style="display:none;color:var(--pk-warning);margin-top:5px;"></small>
     </div>
 
+    
     <!-- Email -->
     <div class="form-group">
       <label class="form-label">Alamat Email <span style="color:var(--pk-danger)">*</span></label>
@@ -108,7 +115,7 @@
         <i class="bi bi-envelope"></i>
         <input type="email" name="email" class="form-control"
                placeholder="email@contoh.com"
-               value="" required>
+               value="<?= old('email') ?>" required>
       </div>
     </div>
 
@@ -140,7 +147,7 @@
   </form>
 
   <div class="auth-footer">
-    Sudah punya akun? <a href="/login">Masuk di sini</a>
+    Sudah punya akun? <a href="<?= base_url('login') ?>">Masuk di sini</a>
   </div>
 </div>
 
@@ -187,19 +194,21 @@ document.addEventListener("DOMContentLoaded", function () {
           a.neighbourhood || "";
 
         // ── Kecamatan ─────────────────────────────────────────────────
+        // Nominatim Indonesia sangat tidak konsisten untuk kecamatan.
+        // Urutan ini berdasarkan pengujian aktual di berbagai kota.
         elKecamatan.value =
-          a.city_district ||
-          a.subdistrict   ||
-          a.district      ||
-          a.town          ||
-          a.municipality  ||
+          a.city_district ||  // paling sering untuk kecamatan kota
+          a.subdistrict   ||  // kadang muncul di daerah tertentu
+          a.district      ||  // alternatif
+          a.town          ||  // kota kecil / kecamatan
+          a.municipality  ||  // variasi lain
           "";
 
         // ── Kabupaten / Kota ──────────────────────────────────────────
         elKabupaten.value =
-          a.county   ||
-          a.regency  ||
-          a.city     ||
+          a.county   ||       // kabupaten
+          a.regency  ||       // kabupaten (tag alternatif)
+          a.city     ||       // kota madya
           "";
 
         // ── Provinsi ──────────────────────────────────────────────────
