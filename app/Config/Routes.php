@@ -27,6 +27,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Data Tanaman
     $routes->get('tanaman',             'Tanaman::index');
+    $routes->get('tanaman/data',        'Tanaman::getData');
 });
 
 // Redirect root to login

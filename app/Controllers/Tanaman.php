@@ -18,4 +18,12 @@ class Tanaman extends BaseController
         return view('tanaman/index', ['title' => 'Data Tanaman']);
     }
 
+    public function getData()
+    {
+        $data = $this->model->getByUser($this->userId());
+        foreach ($data as &$row) {
+            $row['masa_tanam_fmt'] = $row['masa_tanam'] ? $row['masa_tanam'] . ' hari' : '-';
+        }
+        return $this->jsonResponse(['data' => $data, 'total' => count($data)]);
+    }
 }
