@@ -15,6 +15,11 @@ class Auth extends Controller
         helper(['form', 'url']);
     }
 
+    public function login()
+    {
+        return view('auth/login', ['title' => 'Login — PanenKu']);
+    }
+
     public function register()
     {
         return view('auth/register', ['title' => 'Daftar — PanenKu']);
