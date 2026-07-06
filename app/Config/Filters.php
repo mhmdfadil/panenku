@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\AuthFilter;
 use App\Filters\GuestFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
@@ -35,6 +36,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'auth'          => AuthFilter::class,
         'guest'         => GuestFilter::class,
     ];
 
