@@ -15,3 +15,14 @@ $routes->group('', ['filter' => 'guest'], function ($routes) {
     $routes->get('register',    'Auth::register');
     $routes->post('register',   'Auth::doRegister');
 });
+
+// ============================================================
+// APP ROUTES (auth required)
+// ============================================================
+$routes->group('', ['filter' => 'auth'], function ($routes) {
+    // Dashboard
+    $routes->get('dashboard',   'Dashboard::index');
+});
+
+// Redirect root to login
+$routes->get('/', 'Auth::login');
