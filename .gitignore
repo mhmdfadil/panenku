@@ -124,3 +124,9 @@ _modules/*
 
 /results/
 /phpunit.xml
+
+# Ignore uploaded files
+/public/uploads/*
+
+# Keep the folder
+!/public/uploads/.gitkeep
