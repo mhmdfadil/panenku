@@ -56,6 +56,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('riwayat',             'Riwayat::index');
     $routes->get('riwayat/data',        'Riwayat::getData');
 
+    // Laporan
+    $routes->get('laporan',             'Laporan::index');
+
 });
 
 // Redirect root to login
