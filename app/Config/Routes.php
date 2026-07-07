@@ -45,6 +45,12 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Pencatatan Panen
     $routes->get('panen',               'Panen::index');
     $routes->get('panen/data',          'Panen::getData');
+    $routes->get('panen/create',        'Panen::create');
+    $routes->post('panen/store',        'Panen::store');
+    $routes->get('panen/edit/(:num)',   'Panen::edit/$1');
+    $routes->post('panen/update/(:num)', 'Panen::update/$1');
+    $routes->delete('panen/delete/(:num)', 'Panen::delete/$1');
+    $routes->get('panen/show/(:num)',   'Panen::show/$1');
 
 });
 
