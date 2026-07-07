@@ -36,6 +36,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Data Lahan
     $routes->get('lahan',               'Lahan::index');
+    $routes->get('lahan/data',          'Lahan::getData');
+
 });
 
 // Redirect root to login
