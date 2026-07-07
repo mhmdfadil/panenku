@@ -66,4 +66,49 @@ class Laporan extends BaseController
         ]);
     }
 
+    public function cetak()
+    {
+        $userId       = $this->userId();
+        $model        = new PanenModel();
+        $userModel    = new UserModel();
+        $tanamanModel = new TanamanModel();
+        $lahanModel   = new LahanModel();
+
+        $filters = [
+            'tanaman_id' => $this->request->getGet('tanaman_id'),
+            'lahan_id'   => $this->request->getGet('lahan_id'),
+            'dari'       => $this->request->getGet('dari'),
+            'sampai'     => $this->request->getGet('sampai'),
+        ];
+
+        $data          = $model->getWithRelations($userId, $filters);
+        $totalNilai    = array_sum(array_column($data, 'total_nilai'));
+        $user          = $userModel->find($userId);
+
+        // Hitung total per satuan
+        $perSatuan = [];
+        foreach ($data as $row) {
+            $s = $row['satuan'] ?? 'kg';
+            $perSatuan[$s] = ($perSatuan[$s] ?? 0) + (float)$row['jumlah_panen'];
+        }
+        $totalProduksi    = array_sum($perSatuan);
+        $totalProduksiFmt = implode(' • ', array_map(
+            fn($s, $v) => number_format($v, 0, ',', '.') . ' ' . $s,
+            array_keys($perSatuan), array_values($perSatuan)
+        )) ?: '0';
+
+        return view('laporan/cetak', [
+            'title'            => 'Laporan Panen',
+            'data'             => $data,
+            'filters'          => $filters,
+            'totalProduksi'    => $totalProduksi,
+            'totalProduksiFmt' => $totalProduksiFmt,
+            'perSatuan'        => $perSatuan,
+            'totalNilai'       => $totalNilai,
+            'user'             => $user,
+            'tanaman'          => $tanamanModel->getForSelect($userId),
+            'lahan'            => $lahanModel->getForSelect($userId),
+        ]);
+    }
+
 }
