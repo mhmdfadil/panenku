@@ -33,6 +33,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->delete('tanaman/delete/(:num)', 'Tanaman::delete/$1');
     $routes->get('tanaman/show/(:num)', 'Tanaman::show/$1');
     $routes->get('tanaman/satuan-map',  'Tanaman::satuanMap');
+
+    // Data Lahan
+    $routes->get('lahan',               'Lahan::index');
 });
 
 // Redirect root to login
