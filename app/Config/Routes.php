@@ -37,6 +37,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // Data Lahan
     $routes->get('lahan',               'Lahan::index');
     $routes->get('lahan/data',          'Lahan::getData');
+    $routes->post('lahan/store',        'Lahan::store');
+    $routes->post('lahan/update/(:num)', 'Lahan::update/$1');
+    $routes->delete('lahan/delete/(:num)', 'Lahan::delete/$1');
+    $routes->get('lahan/show/(:num)',   'Lahan::show/$1');
 
 });
 
