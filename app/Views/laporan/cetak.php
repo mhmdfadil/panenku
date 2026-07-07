@@ -51,10 +51,14 @@
   </div>
   <div class="report-info">
     <div class="report-title">Laporan Hasil Panen</div>
-    <div id="periodeInfo">Semua Periode</div>
-    <div>Petani: <strong id="userNama">Budi Santoso</strong></div>
-    <div>Lokasi: <span id="userDesa">Sukamaju</span></div>
-    <div id="tanggalCetak">Dicetak: —</div>
+    <?php if (!empty($filters['dari']) || !empty($filters['sampai'])): ?>
+      <div>Periode: <?= $filters['dari'] ? date('d M Y', strtotime($filters['dari'])) : '—' ?> s/d <?= $filters['sampai'] ? date('d M Y', strtotime($filters['sampai'])) : '—' ?></div>
+    <?php else: ?>
+      <div>Semua Periode</div>
+    <?php endif; ?>
+    <div>Petani: <?= esc($user['nama']) ?></div>
+    <div>Lokasi: <?= esc($user['desa'] ?? '-') ?></div>
+    <div>Dicetak: <?= date('d M Y H:i') ?></div>
   </div>
 </div>
 
@@ -62,19 +66,23 @@
 <div class="summary">
   <div class="sum-box">
     <div class="sum-label">Total Panen</div>
-    <div class="sum-value" id="sumCount">— kali</div>
+    <div class="sum-value"><?= count($data) ?> kali</div>
   </div>
   <div class="sum-box">
     <div class="sum-label">Total Produksi</div>
-    <div class="sum-value sum-value-stack" id="sumProduksi"></div>
+    <div class="sum-value sum-value-stack">
+      <?php foreach(explode('•', $totalProduksiFmt) as $line): ?>
+        <div><?= esc(trim($line)) ?></div>
+      <?php endforeach; ?>
+    </div>
   </div>
   <div class="sum-box">
     <div class="sum-label">Total Nilai</div>
-    <div class="sum-value" id="sumNilai" style="font-size:13px;">Rp 0</div>
+    <div class="sum-value" style="font-size:13px;">Rp <?= number_format($totalNilai, 0, ',', '.') ?></div>
   </div>
   <div class="sum-box">
     <div class="sum-label">Rata-rata/Panen</div>
-    <div class="sum-value" id="sumAvg">0</div>
+    <div class="sum-value"><?= count($data) > 0 ? number_format($totalProduksi / count($data), 1, ',', '.') : 0 ?></div>
   </div>
 </div>
 
@@ -92,15 +100,34 @@
       <th>Kualitas</th>
     </tr>
   </thead>
-  <tbody id="tableBody">
-    <!-- diisi otomatis oleh JS dari data contoh -->
+  <tbody>
+    <?php if (empty($data)): ?>
+      <tr><td colspan="8" style="text-align:center; color:#888; padding:20px;">Tidak ada data</td></tr>
+    <?php else: ?>
+      <?php foreach ($data as $i => $d):
+        $badgeCls = match($d['kualitas']) { 'Sangat Baik' => 'badge-success', 'Baik' => 'badge-primary', 'Cukup' => 'badge-warning', 'Kurang' => 'badge-danger', default => '' };
+      ?>
+      <tr>
+        <td><?= $i + 1 ?></td>
+        <td style="white-space:nowrap;"><?= date('d M Y', strtotime($d['tanggal_panen'])) ?></td>
+        <td><?= esc($d['nama_tanaman']) ?><?= $d['varietas'] ? ' <small style="color:#888;">(' . esc($d['varietas']) . ')</small>' : '' ?></td>
+        <td><?= esc($d['nama_lahan']) ?></td>
+        <td style="text-align:right;"><?= number_format($d['jumlah_panen'], 0, ',', '.') ?> <?= esc($d['satuan']) ?></td>
+        <td style="text-align:right;">Rp <?= number_format($d['harga_per_kg'], 0, ',', '.') ?></td>
+        <td style="text-align:right; font-weight:600;">Rp <?= number_format($d['total_nilai'], 0, ',', '.') ?></td>
+        <td><span class="badge <?= $badgeCls ?>"><?= esc($d['kualitas']) ?></span></td>
+      </tr>
+      <?php endforeach; ?>
+    <?php endif; ?>
   </tbody>
   <tfoot>
     <tr>
       <td colspan="4" style="text-align:right;">TOTAL</td>
-      <td style="text-align:right;" id="footProduksi"></td>
+      <td style="text-align:right;">
+        <?= implode('<br>', array_map('trim', explode('•', $totalProduksiFmt))) ?>
+      </td>
       <td></td>
-      <td style="text-align:right;" id="footNilai">Rp 0</td>
+      <td style="text-align:right;">Rp <?= number_format($totalNilai, 0, ',', '.') ?></td>
       <td></td>
     </tr>
   </tfoot>
@@ -108,13 +135,13 @@
 
 <div class="footer">
   <div>
-    <div>Dicetak oleh: <strong id="footerNama">Budi Santoso</strong></div>
-    <div id="footerDesa">Sukamaju</div>
+    <div>Dicetak oleh: <strong><?= esc($user['nama']) ?></strong></div>
+    <div><?= esc($user['desa'] ?? '') ?></div>
   </div>
   <div class="ttd">
-    <div id="ttdLokasiTanggal">Sukamaju, —</div>
+    <div><?= esc($user['desa'] ?? '') ?>, <?= date('d M Y') ?></div>
     <div class="ttd-line"></div>
-    <div><strong id="ttdNama">Budi Santoso</strong></div>
+    <div><strong><?= esc($user['nama']) ?></strong></div>
     <div style="font-size:11px; color:#666;">Petani</div>
   </div>
 </div>
@@ -126,104 +153,8 @@
 </div>
 
 <script>
-/* =========================================================
-   DATA CONTOH (statis) — pengganti data dari controller PHP
-   ========================================================= */
-const user = { nama: 'Budi Santoso', desa: 'Sukamaju' };
-
-const filters = { dari: '2026-06-01', sampai: '2026-07-06' }; // kosongkan ('') untuk "Semua Periode"
-
-const data = [
-  { tanggal_panen: '2026-07-02', nama_tanaman: 'Padi',    varietas: 'IR64',      nama_lahan: 'Sawah Utara',    jumlah_panen: 500, satuan: 'kg', harga_per_kg: 7000, total_nilai: 3500000, kualitas: 'Sangat Baik' },
-  { tanggal_panen: '2026-06-28', nama_tanaman: 'Jagung',  varietas: 'Pioneer 27',nama_lahan: 'Ladang Timur',   jumlah_panen: 300, satuan: 'kg', harga_per_kg: 6000, total_nilai: 1800000, kualitas: 'Baik' },
-  { tanggal_panen: '2026-06-20', nama_tanaman: 'Cabai',   varietas: '',          nama_lahan: 'Kebun Belakang', jumlah_panen: 120, satuan: 'kg', harga_per_kg: 20000,total_nilai: 2400000, kualitas: 'Baik' },
-  { tanggal_panen: '2026-06-14', nama_tanaman: 'Tomat',   varietas: '',          nama_lahan: 'Kebun Belakang', jumlah_panen: 200, satuan: 'kg', harga_per_kg: 8000, total_nilai: 1600000, kualitas: 'Cukup' },
-  { tanggal_panen: '2026-06-05', nama_tanaman: 'Kedelai', varietas: '',          nama_lahan: 'Ladang Timur',   jumlah_panen: 150, satuan: 'kg', harga_per_kg: 6000, total_nilai: 900000,  kualitas: 'Kurang' },
-];
-
-/* ========================================================= */
-
-const badgeCls = {
-  'Sangat Baik': 'badge-success',
-  'Baik': 'badge-primary',
-  'Cukup': 'badge-warning',
-  'Kurang': 'badge-danger',
-};
-
-const fmtDate = (v) => v ? new Date(v).toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' }) : '—';
-const fmtRp   = (v) => 'Rp ' + Number(v||0).toLocaleString('id-ID');
-const fmtNum  = (v) => Number(v||0).toLocaleString('id-ID');
-
-// Total produksi per satuan, misal "500 kg • 300 kg" -> digabung per satuan
-function buildTotalProduksiFmt(rows) {
-  const bySatuan = {};
-  rows.forEach(d => {
-    bySatuan[d.satuan] = (bySatuan[d.satuan] || 0) + Number(d.jumlah_panen || 0);
-  });
-  return Object.entries(bySatuan).map(([satuan, total]) => `${fmtNum(total)} ${satuan}`);
-}
-
-(function render() {
-  // Info periode
-  const periodeEl = document.getElementById('periodeInfo');
-  if (filters.dari || filters.sampai) {
-    const dari   = filters.dari ? new Date(filters.dari).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-    const sampai = filters.sampai ? new Date(filters.sampai).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-    periodeEl.textContent = `Periode: ${dari} s/d ${sampai}`;
-  } else {
-    periodeEl.textContent = 'Semua Periode';
-  }
-
-  // Info user
-  document.getElementById('userNama').textContent = user.nama;
-  document.getElementById('userDesa').textContent = user.desa || '-';
-  document.getElementById('footerNama').textContent = user.nama;
-  document.getElementById('footerDesa').textContent = user.desa || '';
-  document.getElementById('ttdNama').textContent = user.nama;
-
-  const now = new Date();
-  document.getElementById('tanggalCetak').textContent =
-    'Dicetak: ' + now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('ttdLokasiTanggal').textContent =
-    (user.desa || '') + ', ' + now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
-
-  // Summary
-  const totalNilai = data.reduce((s,d) => s + Number(d.total_nilai||0), 0);
-  const totalProduksiFmtParts = buildTotalProduksiFmt(data);
-  const totalProduksiSum = data.reduce((s,d) => s + Number(d.jumlah_panen||0), 0);
-
-  document.getElementById('sumCount').textContent = data.length + ' kali';
-  document.getElementById('sumProduksi').innerHTML = totalProduksiFmtParts.map(l => `<div>${l}</div>`).join('');
-  document.getElementById('sumNilai').textContent = fmtRp(totalNilai);
-  document.getElementById('sumAvg').textContent = data.length > 0
-    ? (totalProduksiSum / data.length).toLocaleString('id-ID', { maximumFractionDigits: 1 })
-    : '0';
-
-  // Tabel
-  const tbody = document.getElementById('tableBody');
-  if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#888; padding:20px;">Tidak ada data</td></tr>`;
-  } else {
-    tbody.innerHTML = data.map((d, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td style="white-space:nowrap;">${fmtDate(d.tanggal_panen)}</td>
-        <td>${d.nama_tanaman}${d.varietas ? ` <small style="color:#888;">(${d.varietas})</small>` : ''}</td>
-        <td>${d.nama_lahan}</td>
-        <td style="text-align:right;">${fmtNum(d.jumlah_panen)} ${d.satuan}</td>
-        <td style="text-align:right;">${fmtRp(d.harga_per_kg)}</td>
-        <td style="text-align:right; font-weight:600;">${fmtRp(d.total_nilai)}</td>
-        <td><span class="badge ${badgeCls[d.kualitas] || ''}">${d.kualitas}</span></td>
-      </tr>`).join('');
-  }
-
-  // Footer tabel (total)
-  document.getElementById('footProduksi').innerHTML = totalProduksiFmtParts.join('<br>');
-  document.getElementById('footNilai').textContent = fmtRp(totalNilai);
-})();
-
-// Auto-print on load
-// window.onload = () => window.print();
+  // Auto-print on load
+  // window.onload = () => window.print();
 </script>
 </body>
 </html>
