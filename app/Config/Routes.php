@@ -54,6 +54,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Riwayat Panen
     $routes->get('riwayat',             'Riwayat::index');
+    $routes->get('riwayat/data',        'Riwayat::getData');
 
 });
 
