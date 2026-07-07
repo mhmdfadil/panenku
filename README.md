@@ -1,69 +1,245 @@
-# CodeIgniter 4 Application Starter
+# 🌾 PanenKu — Sistem Informasi Pencatatan Hasil Panen
 
-## What is CodeIgniter?
+Aplikasi web berbasis **CodeIgniter 4** untuk pencatatan dan manajemen hasil panen pertanian. Dirancang untuk petani agar dapat memantau produksi, menganalisis tren, dan mengelola data lahan secara efisien.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## ✨ Fitur Utama
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+| Fitur | Deskripsi |
+|-------|-----------|
+| 📊 Dashboard | Ringkasan total panen, produksi, luas lahan, nilai panen |
+| 🌱 Data Tanaman | Kelola jenis tanaman & komoditas |
+| 🗺️ Data Lahan | Kelola data lahan pertanian |
+| 📝 Pencatatan Panen | Form pencatatan dengan filtering & searching (AG Grid) |
+| 📋 Riwayat Panen | Lihat semua riwayat dengan filter & search (AG Grid) |
+| 📄 Laporan Panen | Ekspor laporan (print-friendly) |
+| 📈 Grafik & Analisis | Visualisasi tren produksi per bulan/komoditas |
+| 👤 Profil & Pengaturan | Edit profil, password, dan preferensi |
+| 🌙 Dark/Light/System Mode | Tema otomatis mengikuti OS atau manual |
+| 🔤 Mode Baca | Aksesibilitas: font lebih besar, kontras tinggi |
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+---
 
-## Installation & updates
+## 🛠️ Teknologi
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- **Backend**: CodeIgniter 4 (PHP 8.1+)
+- **Database**: MySQL 8.0+
+- **Frontend Grid**: AG Grid Community (JavaScript)
+- **Chart**: Chart.js
+- **CSS Framework**: Bootstrap 5 + Custom CSS
+- **Icons**: Bootstrap Icons
+- **Pattern**: MVC (Model-View-Controller)
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+---
 
-## Setup
+## 📋 Persyaratan Sistem
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+- PHP >= 8.1
+- MySQL >= 8.0
+- Composer >= 2.x
+- Web Server: Apache/Nginx (atau `php spark serve` untuk development)
+- Extension PHP: `intl`, `mbstring`, `mysqlnd`, `curl`, `json`
 
-## Important Change with index.php
+---
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+## 🚀 Instalasi & Setup
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+### 1. Clone / Extract Proyek
 
-**Please** read the user guide for a better explanation of how CI4 works!
+```bash
+# Jika dari ZIP:
+unzip panenku.zip -d panenku
+cd panenku
+```
 
-## Repository Management
+### 2. Install Dependencies via Composer
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+```bash
+composer install
+```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+> Jika belum ada Composer: https://getcomposer.org/download/
 
-## Server Requirements
+### 3. Konfigurasi Environment
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+```bash
+cp env .env
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Edit file `.env`:
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+```ini
+# =============================
+# APP CONFIGURATION
+# =============================
+CI_ENVIRONMENT = development
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+app.baseURL = 'http://localhost:8080/'
+app.appName = 'PanenKu'
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+# =============================
+# DATABASE CONFIGURATION
+# =============================
+database.default.hostname = localhost
+database.default.database = panenku_db
+database.default.username = root
+database.default.password = your_password
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
+```
+
+### 4. Buat Database
+
+```sql
+CREATE DATABASE panenku_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### 5. Jalankan Migrasi & Seeder
+
+```bash
+php spark migrate
+php spark db:seed DatabaseSeeder
+```
+
+#### Skip, perintah ini untuk mengulang membuat tabel database.
+```bash
+php spark migrate:refresh
+```
+
+### 6. Atur Permissions
+
+```bash
+chmod -R 755 writable/
+chmod -R 755 public/uploads/
+```
+
+### 7. Jalankan Aplikasi
+
+**Development (built-in server):**
+```bash
+php spark serve
+```
+Akses: http://localhost:8080
+
+**Production (Apache):**
+
+Pastikan `mod_rewrite` aktif dan arahkan DocumentRoot ke folder `public/`.
+
+```apache
+<VirtualHost *:80>
+    ServerName panenku.local
+    DocumentRoot /var/www/html/panenku/public
+    <Directory /var/www/html/panenku/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+---
+
+## 🔑 Akun Default (Setelah Seeder)
+
+| Email | Password | Role |
+|-------|----------|------|
+| budi@panenku.id | password123 | Pengguna |
+| sari@panenku.id | password123 | Pengguna |
+
+---
+
+## 📁 Struktur Direktori
+
+```
+panenku/
+├── app/
+│   ├── Config/          # Konfigurasi CI4 (Routes, Auth, dll)
+│   ├── Controllers/     # Controller MVC
+│   │   ├── Auth.php
+│   │   ├── Dashboard.php
+│   │   ├── Panen.php
+│   │   ├── Riwayat.php
+│   │   ├── Laporan.php
+│   │   ├── Grafik.php
+│   │   ├── Tanaman.php
+│   │   ├── Lahan.php
+│   │   └── Profil.php
+│   ├── Models/          # Model database
+│   │   ├── UserModel.php
+│   │   ├── PanenModel.php
+│   │   ├── TanamanModel.php
+│   │   └── LahanModel.php
+│   ├── Views/           # Tampilan (blade-like PHP)
+│   │   ├── layouts/     # Layout utama
+│   │   ├── auth/        # Login, register
+│   │   ├── dashboard/
+│   │   ├── panen/
+│   │   ├── riwayat/
+│   │   ├── laporan/
+│   │   ├── grafik/
+│   │   └── profil/
+│   ├── Filters/         # Auth filter
+│   └── Database/
+│       ├── Migrations/  # Skema database
+│       └── Seeds/       # Data awal
+├── public/
+│   ├── assets/
+│   │   ├── css/         # Custom CSS + theme
+│   │   └── js/          # Custom JS + AG Grid setup
+│   └── index.php
+├── writable/            # Cache, log, session
+├── .env                 # Konfigurasi environment
+├── composer.json
+└── README.md
+```
+
+---
+
+## 🎨 Tema & Aksesibilitas
+
+- **Light Mode**: Tema terang default
+- **Dark Mode**: Tema gelap, disimpan di `localStorage`
+- **System Mode**: Mengikuti preferensi OS (`prefers-color-scheme`)
+- **Mode Baca**: Font diperbesar (18px), spasi lebih lebar, kontras tinggi
+
+Preferensi tersimpan di browser (`localStorage`) dan diterapkan instan tanpa reload.
+
+---
+
+## 📊 AG Grid
+
+Semua tabel data menggunakan **AG Grid Community Edition**:
+- Sorting multi-kolom
+- Filtering per kolom
+- Search global
+- Pagination
+- Export CSV/Excel (built-in)
+- Responsive
+
+---
+
+## 🔒 Keamanan
+
+- Password di-hash dengan `password_hash()` (bcrypt)
+- CSRF protection aktif
+- Session-based authentication
+- Filter route untuk halaman terproteksi
+- Validasi input server-side
+
+---
+
+## 📝 Lisensi
+
+MIT License — Bebas digunakan untuk kebutuhan pribadi & komersial.
+
+---
+
+## 🤝 Kontribusi
+
+Pull request dan issue sangat disambut. Pastikan mengikuti coding style CI4.
+
+---
+
+*PanenKu © 2024 — Catat Hasil Panen*
