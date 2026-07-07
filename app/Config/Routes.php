@@ -58,6 +58,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Laporan
     $routes->get('laporan',             'Laporan::index');
+    $routes->get('laporan/data',        'Laporan::getData');
 
 });
 
