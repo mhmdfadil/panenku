@@ -83,16 +83,16 @@ class Lahan extends BaseController
             return $this->errorJson('Tidak ditemukan', 404);
         }
 
-        $used = db_connect()
-            ->table('panen')
-            ->where('lahan_id', $id)
-            ->countAllResults();
+        // $used = db_connect()
+        //     ->table('panen')
+        //     ->where('lahan_id', $id)
+        //     ->countAllResults();
 
-        if ($used > 0) {
-            return $this->errorJson(
-                'Lahan tidak dapat dihapus karena sudah digunakan dalam pencatatan panen.'
-            );
-        }
+        // if ($used > 0) {
+        //     return $this->errorJson(
+        //         'Lahan tidak dapat dihapus karena sudah digunakan dalam pencatatan panen.'
+        //     );
+        // }
 
         $this->model->delete($id);
 
