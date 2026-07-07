@@ -13,14 +13,18 @@
     <label class="form-label">Tanaman</label>
     <select id="filterTanaman" class="form-control">
       <option value="">Semua Tanaman</option>
-      <!-- diisi otomatis oleh JS dari data contoh -->
+      <?php foreach ($tanaman as $id => $nama): ?>
+        <option value="<?= $id ?>"><?= esc($nama) ?></option>
+      <?php endforeach; ?>
     </select>
   </div>
   <div class="filter-group">
     <label class="form-label">Lahan</label>
     <select id="filterLahan" class="form-control">
       <option value="">Semua Lahan</option>
-      <!-- diisi otomatis oleh JS dari data contoh -->
+      <?php foreach ($lahan as $id => $nama): ?>
+        <option value="<?= $id ?>"><?= esc($nama) ?></option>
+      <?php endforeach; ?>
     </select>
   </div>
   <div class="filter-group">
@@ -91,43 +95,9 @@
   </div>
 </div>
 
+<?= $this->endSection() ?>
+<?= $this->section('scripts') ?>
 <script>
-/* =========================================================
-   DATA CONTOH (statis) — pengganti data dari controller PHP
-   ========================================================= */
-const tanamanOptions = {
-  1: 'Padi',
-  2: 'Jagung',
-  3: 'Cabai',
-  4: 'Tomat',
-  5: 'Kedelai',
-  6: 'Singkong',
-};
-
-const lahanOptions = {
-  1: 'Sawah Utara',
-  2: 'Ladang Timur',
-  3: 'Kebun Belakang',
-};
-
-(function populateFilterOptions() {
-  const tanamanSel = document.getElementById('filterTanaman');
-  Object.entries(tanamanOptions).forEach(([id, nama]) => {
-    const opt = document.createElement('option');
-    opt.value = id; opt.textContent = nama;
-    tanamanSel.appendChild(opt);
-  });
-
-  const lahanSel = document.getElementById('filterLahan');
-  Object.entries(lahanOptions).forEach(([id, nama]) => {
-    const opt = document.createElement('option');
-    opt.value = id; opt.textContent = nama;
-    lahanSel.appendChild(opt);
-  });
-})();
-
-/* ========================================================= */
-
 let gridApi;
 let mobilePager;
 
@@ -265,5 +235,4 @@ function hapus(id) {
 
 document.getElementById('searchInput').addEventListener('keyup',e=>{if(e.key==='Enter')loadData();});
 </script>
-
 <?= $this->endSection() ?>
