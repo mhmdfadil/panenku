@@ -68,6 +68,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('grafik/komoditas',   'Grafik::komoditas');
     $routes->get('grafik/lahan',       'Grafik::lahan');
 
+    // Profil & Pengaturan
+    $routes->get('profil',              'Profil::index');
+
 });
 
 // Redirect root to login
