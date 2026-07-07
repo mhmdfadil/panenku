@@ -52,6 +52,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->delete('panen/delete/(:num)', 'Panen::delete/$1');
     $routes->get('panen/show/(:num)',   'Panen::show/$1');
 
+    // Riwayat Panen
+    $routes->get('riwayat',             'Riwayat::index');
+
 });
 
 // Redirect root to login
