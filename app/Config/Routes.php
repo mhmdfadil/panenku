@@ -44,6 +44,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Pencatatan Panen
     $routes->get('panen',               'Panen::index');
+    $routes->get('panen/data',          'Panen::getData');
 
 });
 
