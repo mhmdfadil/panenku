@@ -70,6 +70,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Profil & Pengaturan
     $routes->get('profil',              'Profil::index');
+    $routes->post('profil/update',      'Profil::update');
+    $routes->post('profil/password',    'Profil::changePassword');
+    $routes->post('profil/avatar',      'Profil::uploadAvatar');
+    $routes->post('profil/theme',       'Profil::saveTheme');
 
 });
 
