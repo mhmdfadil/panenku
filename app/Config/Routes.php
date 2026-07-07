@@ -61,6 +61,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('laporan/data',        'Laporan::getData');
     $routes->get('laporan/cetak',       'Laporan::cetak');
 
+    // Grafik & Analisis
+    $routes->get('grafik',             'Grafik::index');
+
 });
 
 // Redirect root to login
