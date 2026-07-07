@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Pengaturan Profil - PanenKu</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
-<body>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
 <div style="max-width:960px;margin:0 auto;">
 
@@ -311,5 +305,4 @@ document.getElementById('pwKonfirm')?.addEventListener('input', function() {
 });
 </script>
 
-</body>
-</html>
+<?= $this->endSection() ?>
