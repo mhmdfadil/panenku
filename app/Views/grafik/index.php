@@ -3,12 +3,12 @@
 
 <!-- Period selector -->
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;">
-  <div class="nm-box" style="display:flex;gap:6px;padding:6px;" id="periodSwitcher">
-    <button class="btn btn-outline btn-sm period-btn" data-period="3">3 Bln</button>
-    <button class="btn btn-outline btn-sm period-btn" data-period="6">6 Bln</button>
-    <button class="btn btn-primary btn-sm period-btn" data-period="12">12 Bln</button>
+  <div class="nm-box" style="display:flex;gap:6px;padding:6px;">
+    <?php foreach ([3=>'3 Bln', 6=>'6 Bln', 12=>'12 Bln'] as $n => $label): ?>
+      <button class="btn <?= $n===12?'btn-primary':'btn-outline' ?> btn-sm period-btn" data-period="<?= $n ?>"><?= $label ?></button>
+    <?php endforeach; ?>
   </div>
-  <span style="font-size:13px;color:var(--text-muted);"><i class="bi bi-calendar3"></i> Data per <span id="todayLabel">—</span></span>
+  <span style="font-size:13px;color:var(--text-muted);"><i class="bi bi-calendar3"></i> Data per <?= date('d M Y') ?></span>
 </div>
 
 <style>
@@ -129,52 +129,11 @@
   </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-  // Tanggal hari ini (pengganti PHP date('d M Y'))
-  document.getElementById('todayLabel').textContent =
-    new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-
-  /* =========================================================
-     DATA CONTOH (statis) — pengganti apiFetch ke endpoint PHP
-     ========================================================= */
-  const SAMPLE_TREN_12 = [
-    { label:'Agu', total:380, label_satuan:'380 kg' },
-    { label:'Sep', total:410, label_satuan:'410 kg' },
-    { label:'Okt', total:350, label_satuan:'350 kg' },
-    { label:'Nov', total:460, label_satuan:'460 kg' },
-    { label:'Des', total:520, label_satuan:'520 kg' },
-    { label:'Jan', total:390, label_satuan:'390 kg' },
-    { label:'Feb', total:420, label_satuan:'420 kg' },
-    { label:'Mar', total:510, label_satuan:'510 kg' },
-    { label:'Apr', total:380, label_satuan:'380 kg' },
-    { label:'Mei', total:610, label_satuan:'610 kg' },
-    { label:'Jun', total:700, label_satuan:'700 kg' },
-    { label:'Jul', total:620, label_satuan:'620 kg' },
-  ];
-  const SAMPLE_NILAI_12 = SAMPLE_TREN_12.map(d => ({ label: d.label, nilai: d.total * 7000 }));
-
-  const SAMPLE_KOMODITAS = [
-    { nama_tanaman:'Padi',     total:1200, label_satuan:'1.200 kg' },
-    { nama_tanaman:'Jagung',   total:800,  label_satuan:'800 kg' },
-    { nama_tanaman:'Cabai',    total:450,  label_satuan:'450 kg' },
-    { nama_tanaman:'Tomat',    total:390,  label_satuan:'390 kg' },
-    { nama_tanaman:'Kedelai',  total:250,  label_satuan:'250 kg' },
-    { nama_tanaman:'Singkong', total:150,  label_satuan:'150 kg' },
-  ];
-
-  const SAMPLE_LAHAN = [
-    { nama_lahan:'Sawah Utara',    total:1400, label_satuan:'1.400 kg' },
-    { nama_lahan:'Ladang Timur',   total:1050, label_satuan:'1.050 kg' },
-    { nama_lahan:'Kebun Belakang', total:790,  label_satuan:'790 kg' },
-  ];
-
-  function sliceByPeriod(fullData, months) {
-    return fullData.slice(-months);
-  }
-
-  /* ========================================================= */
 
   const COLORS = ['#2d8a4e','#e67e22','#e74c3c','#3498db','#8e44ad','#1abc9c','#f39c12','#2ecc71'];
   const COLORS_ALPHA = COLORS.map(c => c + 'bb');
@@ -554,14 +513,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ============================================================
   // LOAD ALL DATA
-  // (versi statis: pakai data contoh, bukan fetch ke backend)
   // ============================================================
   async function loadAll(period) {
     try {
-      cache.tren      = sliceByPeriod(SAMPLE_TREN_12, period);
-      cache.nilai     = sliceByPeriod(SAMPLE_NILAI_12, period);
-      cache.komoditas = SAMPLE_KOMODITAS;
-      cache.lahan     = SAMPLE_LAHAN;
+      const [trenRes, nilaiRes, komRes, lahanRes] = await Promise.all([
+        apiFetch('/grafik/produksi?bulan=' + period),
+        apiFetch('/grafik/nilai?bulan=' + period),
+        apiFetch('/grafik/komoditas'),
+        apiFetch('/grafik/lahan'),
+      ]);
+
+      cache.tren      = trenRes.data  || [];
+      cache.nilai     = nilaiRes.data || [];
+      cache.komoditas = komRes.data   || [];
+      cache.lahan     = lahanRes.data || [];
 
       renderTren(cache.tren);
       renderNilai(cache.nilai);
@@ -626,5 +591,4 @@ document.addEventListener('DOMContentLoaded', function () {
   loadAll(currentPeriod);
 });
 </script>
-
 <?= $this->endSection() ?>
