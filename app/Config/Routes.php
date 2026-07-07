@@ -42,6 +42,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->delete('lahan/delete/(:num)', 'Lahan::delete/$1');
     $routes->get('lahan/show/(:num)',   'Lahan::show/$1');
 
+    // Pencatatan Panen
+    $routes->get('panen',               'Panen::index');
+
 });
 
 // Redirect root to login
