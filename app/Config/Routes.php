@@ -63,6 +63,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // Grafik & Analisis
     $routes->get('grafik',             'Grafik::index');
+    $routes->get('grafik/produksi',    'Grafik::produksi');
+    $routes->get('grafik/nilai',       'Grafik::nilai');
+    $routes->get('grafik/komoditas',   'Grafik::komoditas');
+    $routes->get('grafik/lahan',       'Grafik::lahan');
 
 });
 
