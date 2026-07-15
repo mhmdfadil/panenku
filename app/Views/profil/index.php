@@ -123,11 +123,21 @@
           <?= csrf_field() ?>
           <div class="form-group">
             <label class="form-label">Password Lama <span style="color:var(--pk-danger)">*</span></label>
-            <input type="password" name="password_lama" class="form-control" placeholder="Masukkan password saat ini" required>
+            <div class="pwd-field-wrap has-pwd-toggle">
+              <input type="password" name="password_lama" id="pwLama" class="form-control" placeholder="Masukkan password saat ini" required>
+              <button type="button" class="pwd-toggle-btn" data-pwd-toggle="pwLama">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">Password Baru <span style="color:var(--pk-danger)">*</span></label>
-            <input type="password" name="password_baru" id="pwBaru" class="form-control" placeholder="Minimal 6 karakter" required minlength="6">
+            <div class="pwd-field-wrap has-pwd-toggle">
+              <input type="password" name="password_baru" id="pwBaru" class="form-control" placeholder="Minimal 6 karakter" required minlength="6">
+              <button type="button" class="pwd-toggle-btn" data-pwd-toggle="pwBaru">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
             <!-- Strength bar -->
             <div style="margin-top:8px;">
               <div style="height:5px;background:var(--nm-inset);border-radius:3px;overflow:hidden;box-shadow:var(--nm-inset-sm);">
@@ -138,7 +148,12 @@
           </div>
           <div class="form-group">
             <label class="form-label">Konfirmasi Password Baru <span style="color:var(--pk-danger)">*</span></label>
-            <input type="password" name="konfirmasi" id="pwKonfirm" class="form-control" placeholder="Ulangi password baru" required>
+            <div class="pwd-field-wrap has-pwd-toggle">
+              <input type="password" name="konfirmasi" id="pwKonfirm" class="form-control" placeholder="Ulangi password baru" required>
+              <button type="button" class="pwd-toggle-btn" data-pwd-toggle="pwKonfirm">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
             <div id="pwMatch" style="font-size:12px;margin-top:5px;font-weight:600;"></div>
           </div>
           <div style="display:flex;justify-content:flex-end;">

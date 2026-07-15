@@ -1632,6 +1632,11 @@ textarea.form-control { resize: vertical; min-height: 90px; }
   .pwd-toggle-btn { width: 38px; height: 38px; right: 2px; }
 }
 
+/* Password field wrapper WITHOUT a leading icon (e.g. profile settings
+   "change password" form) — same toggle button, no left padding added. */
+.pwd-field-wrap { position: relative; }
+.pwd-field-wrap.has-pwd-toggle .form-control { padding-right: 42px; }
+
 .auth-footer { text-align: center; margin-top: 22px; font-size: 13px; color: var(--text-muted); }
 .auth-footer a { color: var(--pk-primary); font-weight: 700; }
 
