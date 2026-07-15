@@ -123,18 +123,24 @@
     <div class="grid-2" style="gap:12px;">
       <div class="form-group">
         <label class="form-label">Password <span style="color:var(--pk-danger)">*</span></label>
-        <div class="input-icon-wrap">
+        <div class="input-icon-wrap has-pwd-toggle">
           <i class="bi bi-lock"></i>
-          <input type="password" name="password" class="form-control"
+          <input type="password" name="password" id="password" class="form-control"
                  placeholder="Min. 6 karakter" required>
+          <button type="button" class="pwd-toggle-btn" data-pwd-toggle="password">
+            <i class="bi bi-eye"></i>
+          </button>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Konfirmasi Password <span style="color:var(--pk-danger)">*</span></label>
-        <div class="input-icon-wrap">
+        <div class="input-icon-wrap has-pwd-toggle">
           <i class="bi bi-lock-fill"></i>
-          <input type="password" name="konfirmasi_password" class="form-control"
+          <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control"
                  placeholder="Ulangi password" required>
+          <button type="button" class="pwd-toggle-btn" data-pwd-toggle="konfirmasi_password">
+            <i class="bi bi-eye"></i>
+          </button>
         </div>
       </div>
     </div>
