@@ -177,10 +177,97 @@
         <?php if(empty($upcoming)): ?>
           <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:6px 0;">Tidak ada jadwal 30 hari ke depan.</p>
         <?php else: ?>
-          <?php $icons=['Padi'=>'🌾','Jagung'=>'🌽','Cabai'=>'🌶️','Tomat'=>'🍅','Kedelai'=>'🫘','Singkong'=>'🥔']; ?>
+          <?php
+            $icons = [
+                // Tanaman Pangan
+                'Padi'             => '🌾',
+                'Jagung'           => '🌽',
+                'Gandum'           => '🌾',
+                'Kedelai'          => '🫘',
+                'Kacang Tanah'     => '🥜',
+                'Kacang Hijau'     => '🫘',
+                'Singkong'         => '🥔',
+                'Ubi Jalar'        => '🍠',
+                'Kentang'          => '🥔',
+                'Talas'            => '🥔',
+
+                // Sayuran
+                'Cabai'            => '🌶️',
+                'Tomat'            => '🍅',
+                'Terong'           => '🍆',
+                'Mentimun'         => '🥒',
+                'Wortel'           => '🥕',
+                'Bawang Merah'     => '🧅',
+                'Bawang Putih'     => '🧄',
+                'Kubis'            => '🥬',
+                'Sawi'             => '🥬',
+                'Selada'           => '🥬',
+                'Bayam'            => '🥬',
+                'Kangkung'         => '🥬',
+                'Brokoli'          => '🥦',
+                'Kembang Kol'      => '🥦',
+                'Labu'             => '🎃',
+                'Pare'             => '🥒',
+                'Buncis'           => '🫛',
+                'Kacang Panjang'   => '🫛',
+                'Okra'             => '🫛',
+
+                // Buah-buahan
+                'Pisang'           => '🍌',
+                'Mangga'           => '🥭',
+                'Jeruk'            => '🍊',
+                'Apel'             => '🍎',
+                'Anggur'           => '🍇',
+                'Semangka'         => '🍉',
+                'Melon'            => '🍈',
+                'Nanas'            => '🍍',
+                'Pepaya'           => '🍈',
+                'Alpukat'          => '🥑',
+                'Kelapa'           => '🥥',
+                'Durian'           => '🟢',
+                'Rambutan'         => '🔴',
+                'Manggis'          => '🟣',
+                'Jambu'            => '🍏',
+                'Salak'            => '🟤',
+                'Sirsak'           => '🍈',
+
+                // Perkebunan
+                'Kopi'             => '☕',
+                'Kakao'            => '🍫',
+                'Teh'              => '🍃',
+                'Tebu'             => '🎋',
+                'Karet'            => '🌳',
+                'Kelapa Sawit'     => '🌴',
+                'Lada'             => '🧂',
+                'Vanili'           => '🌿',
+                'Cengkeh'          => '🌿',
+                'Pala'             => '🌰',
+                'Kayu Manis'       => '🪵',
+
+                // Rempah
+                'Jahe'             => '🫚',
+                'Kunyit'           => '🫚',
+                'Lengkuas'         => '🫚',
+                'Kencur'           => '🫚',
+                'Serai'            => '🌿',
+                'Daun Bawang'      => '🌿',
+                'Kemangi'          => '🌿',
+                'Seledri'          => '🌿',
+
+                // Default
+                'Lainnya'          => '🌱'
+            ];
+
+            // Buat versi lowercase dari key $icons supaya pencarian tidak case-sensitive
+            $iconsLower = array_change_key_case($icons, CASE_LOWER);
+            $getIcon = function($nama) use ($iconsLower) {
+                $key = strtolower(trim($nama ?? ''));
+                return $iconsLower[$key] ?? '🌱';
+            };
+          ?>
           <?php foreach($upcoming as $u): ?>
           <div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border-color);">
-            <span style="font-size:18px;flex-shrink:0;"><?=$icons[$u['nama_tanaman']]??'🌱'?></span>
+            <span style="font-size:18px;flex-shrink:0;"><?=$getIcon($u['nama_tanaman'])?></span>
             <div style="flex:1;min-width:0;">
               <div style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?=esc($u['nama_tanaman'])?> — <?=esc($u['nama_lahan'])?></div>
               <div style="font-size:11px;color:var(--text-muted);"><?=$u['sisa_hari']?> hari lagi</div>
