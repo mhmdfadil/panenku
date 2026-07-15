@@ -1585,13 +1585,52 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 .auth-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 26px; font-weight: 500; }
 
 .input-icon-wrap { position: relative; }
-.input-icon-wrap .bi {
+.input-icon-wrap > .bi {
   position: absolute; left: 13px; top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted); font-size: 15px;
   pointer-events: none;
 }
 .input-icon-wrap .form-control { padding-left: 40px; }
+
+/* Password show/hide toggle button — lives inside .input-icon-wrap
+   alongside the leading icon and the input itself. */
+.input-icon-wrap.has-pwd-toggle .form-control { padding-right: 42px; }
+
+.pwd-toggle-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 4px;
+  margin: auto 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transition: color var(--transition), background var(--transition);
+}
+.pwd-toggle-btn .bi {
+  position: static;
+  transform: none;
+  pointer-events: none;
+  font-size: 15px;
+  color: inherit;
+}
+.pwd-toggle-btn:hover        { color: var(--pk-primary); background: var(--bg-hover); }
+.pwd-toggle-btn:focus-visible{ outline: 2px solid var(--pk-primary); outline-offset: 1px; color: var(--pk-primary); }
+.pwd-toggle-btn:active       { transform: translateY(-1px) scale(.94); }
+
+@media (max-width: 480px) {
+  .pwd-toggle-btn { width: 38px; height: 38px; right: 2px; }
+}
 
 .auth-footer { text-align: center; margin-top: 22px; font-size: 13px; color: var(--text-muted); }
 .auth-footer a { color: var(--pk-primary); font-weight: 700; }

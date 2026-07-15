@@ -40,12 +40,12 @@
 
     <div class="form-group" style="margin-bottom:20px;">
       <label class="form-label">Password</label>
-      <div class="input-icon-wrap" style="position:relative;">
+      <div class="input-icon-wrap has-pwd-toggle">
         <i class="bi bi-lock"></i>
         <input type="password" name="password" id="password" class="form-control"
                placeholder="Masukkan password" required>
-        <button type="button" onclick="togglePwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:2px;">
-          <i class="bi bi-eye" id="pwd-icon"></i>
+        <button type="button" class="pwd-toggle-btn" data-pwd-toggle="password">
+          <i class="bi bi-eye"></i>
         </button>
       </div>
       <!-- Contoh pesan error validasi password -->
@@ -67,14 +67,5 @@
     Email: <code>budi@panenku.id</code> | Password: <code>password123</code>
   </div>
 </div>
-
-<script>
-function togglePwd() {
-  const inp = document.getElementById('password');
-  const ico = document.getElementById('pwd-icon');
-  if (inp.type === 'password') { inp.type = 'text'; ico.className = 'bi bi-eye-slash'; }
-  else { inp.type = 'password'; ico.className = 'bi bi-eye'; }
-}
-</script>
 
 <?= $this->endSection() ?>

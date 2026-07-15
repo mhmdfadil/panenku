@@ -171,6 +171,29 @@ const ReadMode = (() => {
   return { init };
 })();
 
+/* ── Password Visibility Toggle ───────────────────────────── */
+const PasswordToggle = (() => {
+  function init() {
+    document.querySelectorAll('[data-pwd-toggle]').forEach(btn => {
+      const input = document.getElementById(btn.dataset.pwdToggle);
+      const icon  = btn.querySelector('.bi');
+      if (!input || !icon) return;
+
+      btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-label', 'Tampilkan password');
+
+      btn.addEventListener('click', () => {
+        const willShow = input.type === 'password';
+        input.type = willShow ? 'text' : 'password';
+        icon.className = willShow ? 'bi bi-eye-slash' : 'bi bi-eye';
+        btn.setAttribute('aria-pressed', String(willShow));
+        btn.setAttribute('aria-label', willShow ? 'Sembunyikan password' : 'Tampilkan password');
+      });
+    });
+  }
+  return { init };
+})();
+
 /* ── Modal Helper ─────────────────────────────────────────── */
 const Modal = (() => {
   function open(id) {
@@ -469,6 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Sidebar.init();
   ReadMode.init();
   Modal.init();
+  PasswordToggle.init();
   initAvatarPreview();
   initCounterAnimation();
 
